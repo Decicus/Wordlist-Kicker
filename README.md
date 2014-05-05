@@ -12,4 +12,4 @@ The module allows server owners or admins to blacklist certain words that you wa
 ##Current features:##
 - Adding/removing words from the wordlist.
 - People get kicked if their name contains a blacklisted word on join/when they change their name to contain a blacklisted word.
-- Ability to blacklist strings like "www." or "http://". *Easier than I thought*
+- Ability to blacklist strings like "www." or "http://". (This has something to do with special characters being used in Lua's string library.)
