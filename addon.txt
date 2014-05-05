@@ -2,7 +2,7 @@
 {
 	"name"				"Wordlist Kicker"
 	"version"			"1.0"
-	"up_date"			"2014/05/04"
+	"up_date"			"2014/05/05"
 	"author_name"			"Decicus"
 	"author_email"			"decicus@gmail.com"
 	"author_url"			"http://decicus.com"
