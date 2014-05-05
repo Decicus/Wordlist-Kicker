@@ -6,16 +6,20 @@ local fread = ULib.fileRead( dir .. wordfile )
 local Wordlist = util.KeyValuesToTable( fread )
 
 function WKCheckFiles()
+	
 	if not ULib.fileExists( dir ) then
+		
 		ULib.fileCreateDir( dir )
 		ULib.fileWrite( dir .. wordfile, "" )
+		
 	end
+	
 end
 hook.Add( "Initialize", "WKCheckFiles", WKCheckFiles ) -- Makes sure that the files exist.
 
 function ulx.wkaddword( calling_ply, word, should_remove )
 
-	local word = string.lower( word )
+	local word = string.lower( word ) -- All words should be saved lowercase.
 
 	if not should_remove then
 		
@@ -53,3 +57,43 @@ addword:addParam{ type=ULib.cmds.BoolArg, invisible=true }
 addword:defaultAccess( ULib.ACCESS_SUPERADMIN )
 addword:help( "Adds a word to the Wordlist Kicker wordlist." )
 addword:setOpposite( "ulx removeword", {_, _, true}, "!removeword", true )
+
+function WKCheckNameJoin( ply )
+	
+	local name = string.lower( ply:Nick() ) -- Lowercase makes it a lot easier with comparing.
+	
+	for k, word in pairs( Wordlist ) do
+		
+		local word = string.lower( word ) -- This shouldn't be required unless someone has manually edited "words.txt".
+	
+		if string.find( name, word ) then
+		
+			ULib.kick( ply, "You got kicked for having a name that contained '" .. word .. "'." )
+			return
+			
+		end
+	
+	end
+
+end
+hook.Add( "PlayerInitialSpawn", "WKCheckNameJoin", WKCheckNameJoin )
+
+function WKCheckNameChange( ply, old, new )
+
+	local new = string.lower( new )
+	
+	for k, word in pairs( Wordlist ) do
+	
+		local word = string.lower( word ) -- Read the other functions note.
+		
+		if string.find( new, word ) then
+			
+			ULib.kick( ply, "You got kicked for changing to a name that contained '" .. word .. "'." )
+			return
+		
+		end
+		
+	end
+	
+end
+hook.Add( "ULibPlayerNameChanged", "WKCheckNameJoin", WKCheckNameJoin )
