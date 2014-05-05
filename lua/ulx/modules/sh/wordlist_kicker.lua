@@ -48,6 +48,7 @@ function ulx.wkaddword( calling_ply, word, should_remove )
 			ulx.fancyLogAdmin( calling_ply, true, "#A removed '#s' from the wordlist.", word )
 			
 		end
+		
 	end
 	
 end
@@ -84,7 +85,7 @@ function WKCheckNameChange( ply, old, new )
 	
 	for k, word in pairs( Wordlist ) do
 	
-		local word = string.lower( word ) -- Read the other functions note.
+		local word = string.lower( word )
 		
 		if string.find( new, word, 1, true ) then
 			
