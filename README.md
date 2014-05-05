@@ -6,10 +6,10 @@ The module allows server owners or admins to blacklist certain words that you wa
 (Don't mind the name, I think it needs to change too.)
 
 ##Planned features:##
-- Ability to blacklist strings like "www." or "http://". *PRIORITY*
 - Ability to change where the wordlist is saved.
 - Whitelisting users/Steam ID's that will be ignored.
 
 ##Current features:##
 - Adding/removing words from the wordlist.
 - People get kicked if their name contains a blacklisted word on join/when they change their name to contain a blacklisted word.
+- Ability to blacklist strings like "www." or "http://". *Easier than I thought*

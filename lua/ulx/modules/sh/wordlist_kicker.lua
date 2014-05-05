@@ -66,7 +66,7 @@ function WKCheckNameJoin( ply )
 		
 		local word = string.lower( word ) -- This shouldn't be required unless someone has manually edited "words.txt".
 	
-		if string.find( name, word ) then
+		if string.find( name, word, 1, true ) then
 		
 			ULib.kick( ply, "You got kicked for having a name that contained '" .. word .. "'." )
 			return
@@ -86,7 +86,7 @@ function WKCheckNameChange( ply, old, new )
 	
 		local word = string.lower( word ) -- Read the other functions note.
 		
-		if string.find( new, word ) then
+		if string.find( new, word, 1, true ) then
 			
 			ULib.kick( ply, "You got kicked for changing to a name that contained '" .. word .. "'." )
 			return
