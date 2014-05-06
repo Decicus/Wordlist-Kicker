@@ -17,3 +17,7 @@ The module allows server owners or admins to blacklist certain words that you wa
 
 ##Planned changes/other additions (non-features):##
 - Change opposites (removing words/Steam ID's) to their own functions, for future customizations and better permission-customization for server owners.
+  
+##Downloads - Release Archives:##
+- [Dropbox](https://www.dropbox.com/sh/tzeevvgh4yt3sif/6vY2b2T0ZF)
+- [Google Drive](https://drive.google.com/folderview?id=0B0YQtzHyT_pdV1ZxUE1GOF8tQjA)
