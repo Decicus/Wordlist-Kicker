@@ -1,5 +1,5 @@
 -- Wordlist Kicker --
-
+local CATEGORY_NAME = "Wordlist Kicker"
 local dir = "data/wordlist_kicker/"
 local wordfile = "words.txt"
 local whitelistfile = "whitelist.txt"
@@ -110,6 +110,10 @@ hook.Add( "ULibPlayerNameChanged", "WKCheckNameJoin", WKCheckNameJoin )
 	Wordlist End
 ]]
 
+
+--[[
+	Whitelist Start
+]]
 function ulx.wkwhitelistadd( calling_ply, sid, should_remove )
 	
 	local sid = sid:upper() -- Make sure the Steam ID is uppercase
@@ -163,3 +167,6 @@ whitelist:addParam{ type=ULib.cmds.BoolArg, invisible=true }
 whitelist:defaultAccess( ULib.ACCESS_SUPERADMIN )
 whitelist:help( "Whitelists a Steam ID to the Wordlist Kicker wordlist." )
 whitelist:setOpposite( "ulx whitelistremove", {_, _, true}, "!whitelistremove", true )
+--[[
+	Whitelist End
+]]
