@@ -17,49 +17,54 @@ if whiteread then WKWhitelist = util.KeyValuesToTable( whiteread ) end
 --[[
 	Wordlist Start
 ]]
-function ulx.wkwhitelist( calling_ply, word, should_remove )
+function ulx.wkaddword ( calling_ply, word )
 
 	local word = string.lower( word ) -- All words should be saved lowercase.
 
 	if not ULib.fileExists( dir ) then ULib.fileCreateDir( dir ) end -- Create the folder (if non-existant) so the wordlist can save.
+		
+	if table.HasValue( WKWordlist, word ) then
 	
-	if not should_remove then
-		
-		if table.HasValue( WKWordlist, word ) then
-		
-			ULib.tsayError( calling_ply, "The word already exists in the wordlist." )
+		ULib.tsayError( calling_ply, "The word already exists in the wordlist." )
 
-		else
-			
-			table.insert( WKWordlist, word )
-			ULib.fileWrite( dir .. wordfile, util.TableToKeyValues( WKWordlist ) )
-			ulx.fancyLogAdmin( calling_ply, true, "#A added '#s' to the Wordlist Kicker wordlist.", word )
-			
-		end
-		
 	else
-	
-		if not table.HasValue( WKWordlist, word ) then
 			
-			ULib.tsayError( calling_ply, "The word doesn't exist in the wordlist." )
-			
-		else
-		
-			table.RemoveByValue( WKWordlist, word )
-			ULib.fileWrite( dir .. wordfile, util.TableToKeyValues( WKWordlist ) )
-			ulx.fancyLogAdmin( calling_ply, true, "#A removed '#s' from the Wordlist Kicker wordlist.", word )
-			
-		end
+		table.insert( WKWordlist, word )
+		ULib.fileWrite( dir .. wordfile, util.TableToKeyValues( WKWordlist ) )
+		ulx.fancyLogAdmin( calling_ply, true, "#A added '#s' to the Wordlist Kicker wordlist.", word )
 		
 	end
 	
 end
-local whitelist = ulx.command( CATEGORY_NAME, "ulx whitelist", ulx.wkwhitelist, "!whitelist", true )
-whitelist:addParam{ type=ULib.cmds.StringArg, hint="Word to blacklist" }
-whitelist:addParam{ type=ULib.cmds.BoolArg, invisible=true }
-whitelist:defaultAccess( ULib.ACCESS_SUPERADMIN )
-whitelist:help( "Adds a word to the Wordlist Kicker wordlist." )
-whitelist:setOpposite( "ulx removeword", {_, _, true}, "!removeword", true )
+local addword = ulx.command( CATEGORY_NAME, "ulx addword", ulx.wkaddword, "!addword", true )
+addword:addParam{ type=ULib.cmds.StringArg, hint="Word to blacklist" }
+addword:defaultAccess( ULib.ACCESS_SUPERADMIN )
+addword:help( "Adds a word to the Wordlist Kicker wordlist." )
+
+function ulx.wkremoveword( calling_ply, word )
+	
+	local word = string.lower( word )
+	
+	if not ULib.fileExists( dir ) then ULib.fileCreateDir( dir ) end
+
+	
+	if not table.HasValue( WKWordlist, word ) then
+			
+		ULib.tsayError( calling_ply, "The word doesn't exist in the wordlist." )
+			
+	else
+		
+		table.RemoveByValue( WKWordlist, word )
+		ULib.fileWrite( dir .. wordfile, util.TableToKeyValues( WKWordlist ) )
+		ulx.fancyLogAdmin( calling_ply, true, "#A removed '#s' from the Wordlist Kicker wordlist.", word )
+			
+	end
+
+end
+local removeword = ulx.command( CATEGORY_NAME, "ulx removeword", ulx.wkremoveword, "!removeword", true )
+removeword:addParam{ type=ULib.cmds.StringArg, hint="Word to remove from blacklist." }
+removeword:defaultAccess( ULib.ACCESS_SUPERADMIN )
+removeword:help( "Removes a word from the Wordlist Kicker wordlist." )
 
 function WKCheckNameJoin( ply )
 	
