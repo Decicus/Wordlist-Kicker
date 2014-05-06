@@ -65,6 +65,10 @@ function WKCheckNameJoin( ply )
 	
 	local name = string.lower( ply:Nick() ) -- Lowercase makes it a lot easier with comparing.
 	
+	local sid = ply:SteamID()
+	
+	if table.HasValue( WKWhitelist, sid ) then return end
+	
 	for k, word in pairs( WKWordlist ) do
 		
 		local word = string.lower( word ) -- This shouldn't be required unless someone has manually edited "words.txt".
@@ -84,6 +88,8 @@ hook.Add( "PlayerInitialSpawn", "WKCheckNameJoin", WKCheckNameJoin )
 function WKCheckNameChange( ply, old, new )
 
 	local new = string.lower( new )
+	
+	if table.HasValue( WKWhitelist, sid ) then return end
 	
 	for k, word in pairs( WKWordlist ) do
 	
@@ -115,6 +121,8 @@ function ulx.wkwhitelistadd( calling_ply, sid, should_remove )
 		ULib.tsayError( calling_ply, "Invalid Steam ID." )
 		
 	else
+	
+		if ULib.getPlyByID( sid ) then sid = ULib.getPlyByID( sid ) end
 	
 		if not should_remove then
 	
