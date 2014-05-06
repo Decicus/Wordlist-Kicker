@@ -114,9 +114,9 @@ hook.Add( "ULibPlayerNameChanged", "WKCheckNameJoin", WKCheckNameJoin )
 --[[
 	Whitelist Start
 ]]
-function ulx.wkwhitelistadd( calling_ply, sid, should_remove )
+function ulx.wkwhitelistadd( calling_ply, sid )
 	
-	local sid = sid:upper() -- Make sure the Steam ID is uppercase
+	local sid = string.upper( sid ) -- Make sure the Steam ID is uppercase
 	
 	if not ULib.fileExists( dir ) then ULib.fileCreateDir( dir ) end -- Create the folder if it doesn't exist so whitelist can save.
 	
@@ -125,48 +125,58 @@ function ulx.wkwhitelistadd( calling_ply, sid, should_remove )
 		ULib.tsayError( calling_ply, "Invalid Steam ID." )
 		
 	else
-	
-		if ULib.getPlyByID( sid ) then sid = ULib.getPlyByID( sid ) end
-	
-		if not should_remove then
-	
-			if table.HasValue( WKWhitelist, sid ) then
+		
+		if table.HasValue( WKWhitelist, sid ) then
 			
-				ULib.tsayError( calling_ply, "Steam ID is already whitelisted." )
-				
-			else
-			
-				table.insert( WKWhitelist, word )
-				ULib.fileWrite( dir .. whitelistfile, util.TableToKeyValues( WKWhitelist ) )
-				ulx.fancyLogAdmin( calling_ply, true, "#A added #s to the Wordlist Kicker whitelist.", sid )
-			
-			end
+			ULib.tsayError( calling_ply, "Steam ID is already whitelisted." )
 			
 		else
 			
-			if not table.HasValue( WKWhitelist, sid ) then
-				
-				ULib.tsayError( calling_ply, "Steam ID doesn't exist in the whitelist." )
-				
-			else
+			table.insert( WKWhitelist, word )
+			ULib.fileWrite( dir .. whitelistfile, util.TableToKeyValues( WKWhitelist ) )
+			ulx.fancyLogAdmin( calling_ply, true, "#A added #s to the Wordlist Kicker whitelist.", sid )
 			
-				table.RemoveByValue( WKWordlist, word )
-				ULib.fileWrite( dir .. whitelistfile, util.TableToKeyValues( WKWhitelist ) )
-				ulx.fancyLogAdmin( calling_ply, true, "#A remvoed #s from the Wordlist Kicker whitelist.", sid )
-			
-			end
-		
 		end
 
 	end
 
 end
-local whitelist = ulx.command( CATEGORY_NAME, "ulx whitelistadd", ulx.wkwhitelistadd, "!whitelistadd", true )
-whitelist:addParam{ type=ULib.cmds.StringArg, hint="Steam ID to whitelist" }
-whitelist:addParam{ type=ULib.cmds.BoolArg, invisible=true }
-whitelist:defaultAccess( ULib.ACCESS_SUPERADMIN )
-whitelist:help( "Whitelists a Steam ID to the Wordlist Kicker wordlist." )
-whitelist:setOpposite( "ulx whitelistremove", {_, _, true}, "!whitelistremove", true )
+local whitelistadd = ulx.command( CATEGORY_NAME, "ulx whitelist", ulx.wkwhitelistadd, "!whitelist", true )
+whitelistadd:addParam{ type=ULib.cmds.StringArg, hint="Steam ID to whitelist" }
+whitelistadd:defaultAccess( ULib.ACCESS_SUPERADMIN )
+whitelistadd:help( "Whitelists a Steam ID to the Wordlist Kicker wordlist." )
+
+function ulx.wkwhitelistremove( calling_ply, sid )
+
+	local sid = string.upper( sid )
+	
+	if not ULib.fileExists( dir ) then ULib.fileCreateDir( dir ) end
+	
+	if not ULib.isValidSteamID( sid ) then
+		
+		ULib.tsayError( calling_ply, "Invalid Steam ID." )
+		
+	else
+	
+		if not table.HasValue( WKWhitelist, sid ) then
+			
+			ULib.tsayError( calling_ply, "Steam ID doesn't exist in the whitelist." )
+		
+		else
+		
+			table.RemoveByValue( WKWhitelist, sid )
+			ULib.fileWrite( dir .. whitelistfile, util.TableToKeyValues( WKWhitelist ) )
+			ulx.fancyLogAdmin( calling_ply, true, "#A removed #s from the Wordlist Kicker whitelist.", sid )
+			
+		end
+		
+	end
+
+end
+local whitelistremove = ulx.command( CATEGORY_NAME, "ulx unwhitelist", ulx.wkwhitelistadd, "!unwhitelist", true )
+whitelistremove:addParam{ type=ULib.cmds.StringArg, hint="Steam ID to unwhitelist" }
+whitelistremove:defaultAccess( ULib.ACCESS_SUPERADMIN )
+whitelistremove:help( "Unwhitelists a Steam ID from the Wordlist Kicker whitelist." )
 --[[
 	Whitelist End
 ]]
