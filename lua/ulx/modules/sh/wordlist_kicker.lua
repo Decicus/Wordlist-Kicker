@@ -2,19 +2,22 @@
 
 local dir = "data/wordlist_kicker/"
 local wordfile = "words.txt"
-local fread = ULib.fileRead( dir .. wordfile )
+local whitelistfile = "whitelist.txt"
+local wordread = ULib.fileRead( dir .. wordfile )
+local whiteread = ULib.fileRead( dir .. whitelistfile )
 
-if fread then
+-- Don't touch.
+local WKWordlist = {}
+local WKWhitelist = {}
 
-	WKWordlist = util.KeyValuesToTable( fread )
-	
-else -- KeyValuesToTable errors out if the file doesn't exist.
+-- KeyValuesToTabel errors out if file is nil
+if wordread then WKWordlist = util.KeyValuesToTable( wordread )	end
+if whiteread then WKWhitelist = util.KeyValuesToTable( whiteread ) end
 
-	WKWordlist = {}
-
-end
-
-function ulx.wkaddword( calling_ply, word, should_remove )
+--[[
+	Wordlist Start
+]]
+function ulx.wkwhitelist( calling_ply, word, should_remove )
 
 	local word = string.lower( word ) -- All words should be saved lowercase.
 
@@ -30,7 +33,7 @@ function ulx.wkaddword( calling_ply, word, should_remove )
 			
 			table.insert( WKWordlist, word )
 			ULib.fileWrite( dir .. wordfile, util.TableToKeyValues( WKWordlist ) )
-			ulx.fancyLogAdmin( calling_ply, true, "#A added '#s' to the wordlist.", word )
+			ulx.fancyLogAdmin( calling_ply, true, "#A added '#s' to the Wordlist Kicker wordlist.", word )
 			
 		end
 		
@@ -44,19 +47,19 @@ function ulx.wkaddword( calling_ply, word, should_remove )
 		
 			table.RemoveByValue( WKWordlist, word )
 			ULib.fileWrite( dir .. wordfile, util.TableToKeyValues( WKWordlist ) )
-			ulx.fancyLogAdmin( calling_ply, true, "#A removed '#s' from the wordlist.", word )
+			ulx.fancyLogAdmin( calling_ply, true, "#A removed '#s' from the Wordlist Kicker wordlist.", word )
 			
 		end
 		
 	end
 	
 end
-local addword = ulx.command( CATEGORY_NAME, "ulx addword", ulx.wkaddword, "!addword", true )
-addword:addParam{ type=ULib.cmds.StringArg, hint="Word to blacklist" }
-addword:addParam{ type=ULib.cmds.BoolArg, invisible=true }
-addword:defaultAccess( ULib.ACCESS_SUPERADMIN )
-addword:help( "Adds a word to the WKWordlist Kicker WKWordlist." )
-addword:setOpposite( "ulx removeword", {_, _, true}, "!removeword", true )
+local whitelist = ulx.command( CATEGORY_NAME, "ulx whitelist", ulx.wkwhitelist, "!whitelist", true )
+whitelist:addParam{ type=ULib.cmds.StringArg, hint="Word to blacklist" }
+whitelist:addParam{ type=ULib.cmds.BoolArg, invisible=true }
+whitelist:defaultAccess( ULib.ACCESS_SUPERADMIN )
+whitelist:help( "Adds a word to the Wordlist Kicker wordlist." )
+whitelist:setOpposite( "ulx removeword", {_, _, true}, "!removeword", true )
 
 function WKCheckNameJoin( ply )
 	
@@ -68,7 +71,7 @@ function WKCheckNameJoin( ply )
 	
 		if string.find( name, word, 1, true ) then
 		
-			ULib.kick( ply, "You got kicked for having a name that contained '" .. word .. "'." )
+			ULib.kick( ply, "You got automatically kicked for having a name that contained '" .. word .. "'." )
 			return
 			
 		end
@@ -88,7 +91,7 @@ function WKCheckNameChange( ply, old, new )
 		
 		if string.find( new, word, 1, true ) then
 			
-			ULib.kick( ply, "You got kicked for changing to a name that contained '" .. word .. "'." )
+			ULib.kick( ply, "You got automatically kicked for changing to a name that contained '" .. word .. "'." )
 			return
 		
 		end
@@ -97,3 +100,58 @@ function WKCheckNameChange( ply, old, new )
 	
 end
 hook.Add( "ULibPlayerNameChanged", "WKCheckNameJoin", WKCheckNameJoin )
+--[[
+	Wordlist End
+]]
+
+function ulx.wkwhitelistadd( calling_ply, sid, should_remove )
+	
+	local sid = sid:upper() -- Make sure the Steam ID is uppercase
+	
+	if not ULib.fileExists( dir ) then ULib.fileCreateDir( dir ) end -- Create the folder if it doesn't exist so whitelist can save.
+	
+	if not ULib.isValidSteamID( sid ) then
+		
+		ULib.tsayError( calling_ply, "Invalid Steam ID." )
+		
+	else
+	
+		if not should_remove then
+	
+			if table.HasValue( WKWhitelist, sid ) then
+			
+				ULib.tsayError( calling_ply, "Steam ID is already whitelisted." )
+				
+			else
+			
+				table.insert( WKWhitelist, word )
+				ULib.fileWrite( dir .. whitelistfile, util.TableToKeyValues( WKWhitelist ) )
+				ulx.fancyLogAdmin( calling_ply, true, "#A added #s to the Wordlist Kicker whitelist.", sid )
+			
+			end
+			
+		else
+			
+			if not table.HasValue( WKWhitelist, sid ) then
+				
+				ULib.tsayError( calling_ply, "Steam ID doesn't exist in the whitelist." )
+				
+			else
+			
+				table.RemoveByValue( WKWordlist, word )
+				ULib.fileWrite( dir .. whitelistfile, util.TableToKeyValues( WKWhitelist ) )
+				ulx.fancyLogAdmin( calling_ply, true, "#A remvoed #s from the Wordlist Kicker whitelist.", sid )
+			
+			end
+		
+		end
+
+	end
+
+end
+local whitelist = ulx.command( CATEGORY_NAME, "ulx whitelistadd", ulx.wkwhitelistadd, "!whitelistadd", true )
+whitelist:addParam{ type=ULib.cmds.StringArg, hint="Steam ID to whitelist" }
+whitelist:addParam{ type=ULib.cmds.BoolArg, invisible=true }
+whitelist:defaultAccess( ULib.ACCESS_SUPERADMIN )
+whitelist:help( "Whitelists a Steam ID to the Wordlist Kicker wordlist." )
+whitelist:setOpposite( "ulx whitelistremove", {_, _, true}, "!whitelistremove", true )
