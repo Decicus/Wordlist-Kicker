@@ -6,6 +6,69 @@ local whitelistfile = "whitelist.txt"
 local wordread = ULib.fileRead( dir .. wordfile )
 local whiteread = ULib.fileRead( dir .. whitelistfile )
 
+--[[
+	Wordlist Kicker Config Start
+]]
+-- I honestly haven't worked with tables that have values assigned to a key (that's what they're called, right? eh).
+-- I guess I'll give it a try to get a config working.
+-- By the way, I took a look at LeyAC ( Anti-Cheat, can be found on Coderhire: http://coderhire.com/scripts/view/951 ) for "ideas" ( I basically used the same way that the developer of LeyAC did ).
+-- If anyone actually reads this and know about a better way, let me know, I'm awful.
+
+-- Honestly, you shouldn't touch anything below, as they're default settings.
+local WKConf = {}
+
+WKConf.IgnoreAdmins = "no" -- Values: "yes"/"no" - 'Yes' will ignore admins and 'no' will not ignore. (This also includes superadmins and any other group that inherits from "admin")
+WKConf.IgnoreSuperadmins = "no" -- Values: "yes"/"no" - Works the same as IgnoreAdmins, but this will only ignore superadmin and any group above that.
+
+
+local wkconfig = "data/wordlist_kicker/wk_config.txt"
+if not ULib.fileRead( wkconfig ) then
+
+	ULib.fileWrite( wkconfig, util.TableToKeyValues( WKConf ) )
+	
+end
+
+if ULib.fileRead( wkconfig ) then
+	
+	local kvalues = util.KeyValuesToTable( ULib.fileRead( wkconfig ) )
+	
+	for k, v in pairs( kvalues ) do
+	
+		if not k then continue end
+		
+		WKConf[k] = v
+	
+	end
+	
+end
+
+if WKConf.IgnoreAdmins == "yes" then
+
+	WKConf.IgnoreAdmins = true
+	
+else
+
+	WKConf.IgnoreAdmins = false
+
+end
+
+if WKConf.IgnoreSuperadmins == "yes" then
+
+	WKConf.IgnoreSuperadmins = true
+	
+else
+
+	WKConf.IgnoreSuperadmins = false
+
+end
+
+--[[
+	Wordlist Kicker Config End
+]]
+
+--[[
+	Wordlist Start
+]]
 -- Don't touch.
 local WKWordlist = {}
 local WKWhitelist = {}
@@ -13,10 +76,6 @@ local WKWhitelist = {}
 -- KeyValuesToTabel errors out if file is nil
 if wordread then WKWordlist = util.KeyValuesToTable( wordread )	end
 if whiteread then WKWhitelist = util.KeyValuesToTable( whiteread ) end
-
---[[
-	Wordlist Start
-]]
 function ulx.wkaddword ( calling_ply, word )
 
 	local word = string.lower( word ) -- All words should be saved lowercase.
@@ -73,6 +132,8 @@ function WKCheckNameJoin( ply )
 	local sid = ply:SteamID()
 	
 	if table.HasValue( WKWhitelist, sid ) then return end
+	if WKConf.IgnoreAdmins and ply:IsAdmin() then return end
+	if WKConf.IgnoreSuperadmins and ply:IsSuperAdmin() then return end
 	
 	for k, word in pairs( WKWordlist ) do
 		
@@ -95,6 +156,8 @@ function WKCheckNameChange( ply, old, new )
 	local new = string.lower( new )
 	
 	if table.HasValue( WKWhitelist, sid ) then return end
+	if WKConf.IgnoreAdmins and ply:IsAdmin() then return end
+	if WKConf.IgnoreSuperadmins and ply:IsSuperAdmin() then return end
 	
 	for k, word in pairs( WKWordlist ) do
 	
