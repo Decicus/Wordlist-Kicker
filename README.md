@@ -6,7 +6,8 @@ The module allows server owners or admins to blacklist certain words that you wa
 (Don't mind the name, I think it needs to change too.)
   
 ##Planned features:##
-- Clearing/deleting every word from the wordlist.
+- Clearing/deleting every word from the wordlist (Config)
+- Ignoring admins/superadmins (Config)
   
 ##Current features:##
 - Adding/removing words from the wordlist.
