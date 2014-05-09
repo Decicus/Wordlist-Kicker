@@ -19,9 +19,10 @@ local WKConf = {}
 
 WKConf.IgnoreAdmins = "no" -- Values: "yes"/"no" - 'Yes' will ignore admins and 'no' will not ignore. (This also includes superadmins and any other group that inherits from "admin")
 WKConf.IgnoreSuperadmins = "no" -- Values: "yes"/"no" - Works the same as IgnoreAdmins, but this will only ignore superadmin and any group above that.
+WKConf.ClearWordlist = "no" -- Values: "yes"/"no" - Allows the "clearwords" command to be used with superadmins. Added this in case someone has abusive superadmins (they shouldn't have that rank if they are imo).
 
 
-local wkconfig = "data/wordlist_kicker/wk_config.txt"
+local wkconfig = dir .. "wk_config.txt"
 if not ULib.fileRead( wkconfig ) then
 
 	ULib.fileWrite( wkconfig, util.TableToKeyValues( WKConf ) )
@@ -62,6 +63,15 @@ else
 
 end
 
+if WKConf.ClearWordlist == "yes" then
+	
+	WKConf.ClearWordlist = true
+	
+else
+
+	WKConf.ClearWordlist = false
+	
+end
 --[[
 	Wordlist Kicker Config End
 ]]
@@ -124,6 +134,24 @@ local removeword = ulx.command( CATEGORY_NAME, "ulx removeword", ulx.wkremovewor
 removeword:addParam{ type=ULib.cmds.StringArg, hint="Word to remove from blacklist." }
 removeword:defaultAccess( ULib.ACCESS_SUPERADMIN )
 removeword:help( "Removes a word from the Wordlist Kicker wordlist." )
+
+function ulx.clearwordlist( calling_ply )
+
+	if not WKConf.ClearWordlist then
+	
+		ULib.tsayError( calling_ply, "You cannot delete the wordlist, since the WK-configuration disables this feature." )
+	
+	else
+	
+		ULib.fileDelete( dir .. wordfile )
+		ulx.fancyLogAdmin( calling_ply, true, "#A cleared and deleted the wordlist." )
+	
+	end
+
+end
+local clearwl = ulx.command( CATEGORY_NAME, "ulx clearwords", ulx.clearwordlist, "!clearwords", true )
+clearwl:defaultAccess( ULib.ACCESS_SUPERADMIN )
+clearwl:help( "Clears the whole wordlist. USE WITH PRECAUTION!" )
 
 function WKCheckNameJoin( ply )
 	

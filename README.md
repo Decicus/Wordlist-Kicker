@@ -6,16 +6,17 @@ The module allows server owners or admins to blacklist certain words that you wa
 (Don't mind the name, I think it needs to change too.)
   
 ##Planned features:##
-- Clearing/deleting every word from the wordlist.
+- Currently none.
   
 ##Current features:##
 - Adding/removing words from the wordlist.
 - People get kicked if their name contains a blacklisted word on join/when they change their name to contain a blacklisted word.
 - Ability to blacklist strings like "www." or "http://". (This has something to do with special characters being used in Lua's string library.)
-- Whitelisting users/Steam ID's that will be ignored (WIP - Needs testing).
+- Whitelisting users/Steam ID's that will be ignored (Added in v1.1 - WIP - Needs testing).
+- Clearing/deleting every word from the wordlist. (Added in v1.1 - WIP - Needs testing).
   
 ##Planned changes/other additions (non-features):##
-- Config (WIP - Needs testing)
+- Config (Added in v1.1 - WIP - Needs testing)
   
 ##Finished changes/other additions:##
 - Change opposites (removing words/Steam ID's) to their own functions, for future customizations and better permission-customization for server owners.
@@ -26,9 +27,10 @@ The module allows server owners or admins to blacklist certain words that you wa
 - [My website (Decicus.com)](http://decicus.com/wk/)
   
 ##Changelog:##
-- ###Version 1.1:###
+- ###Version 1.1 (Coming soon):###
 	- Added configuration (read above for help).
 	- Added whitelisting of Steam ID's (players coming soon)
+	- Ability to clear the wordlist. USE WITH PRECAUTION (Disabled in config by default)
   
 - ###Version 1.0:###
 	- Added adding/removing words.
