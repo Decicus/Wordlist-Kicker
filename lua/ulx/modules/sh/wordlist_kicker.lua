@@ -120,7 +120,37 @@ hook.Add( "ULibPlayerNameChanged", "WKCheckNameJoin", WKCheckNameJoin )
 --[[
 	Whitelist Start
 ]]
-function ulx.wkwhitelistadd( calling_ply, sid )
+
+function ulx.wkwhitelistadd( calling_ply, target_ply )
+
+	if not ULib.fileExists( dir ) then ULib.fileCreateDir( dir ) end
+	
+	if table.HasValue( WKWhitelist, target_ply:SteamID() ) then
+		
+		ULib.tsayError( calling_ply, "Player is already whitelisted!" )
+		
+	else
+	
+		table.insert( WKWhitelist, target_ply:SteamID() )
+		ULib.fileWrite( dir .. whitelistfile, util.TableToKeyValues( WKWhitelist ) )
+		ulx.fancyLogAdmin( calling_ply, true, "#A added #T to the Wordlist Kicker whitelist.", target_ply )
+	
+	end
+	
+end
+local whitelistply = ulx.command( CATEGORY_NAME, "ulx whitelist", ulx.wkwhitelistadd, "!whitelist", true )
+whitelistply:addParam { type=ULib.cmds.PlayerArg }
+whitelistply:defaultAccess( ULib.ACCESS_SUPERADMIN )
+whitelistply:help( "Whitelists a player that is currently connected to the server, to the Wordlist Kicker whitelist." )
+
+function ulx.wkwhitelistremove( calling_ply, target_ply )
+end
+local whitelistplyr = ulx.command( CATEGORY_NAME, "ulx unwhitelist", ulx.wkwhitelistremove, "!unwhitelist", true )
+whitelistplyr:addParam { type=ULib.cmds.PlayerArg }
+whitelistplyr:defaultAccess( ULib.ACCESS_SUPERADMIN )
+whitelistply:help( "Removes a player that is currently connected to the server, from the Wordlist Kicker whitelist." )
+
+function ulx.wkwhitelistaddid( calling_ply, sid )
 	
 	local sid = string.upper( sid ) -- Make sure the Steam ID is uppercase
 	
@@ -147,12 +177,12 @@ function ulx.wkwhitelistadd( calling_ply, sid )
 	end
 
 end
-local whitelistadd = ulx.command( CATEGORY_NAME, "ulx whitelist", ulx.wkwhitelistadd, "!whitelist", true )
+local whitelistadd = ulx.command( CATEGORY_NAME, "ulx whitelistid", ulx.wkwhitelistaddid, "!whitelistid", true )
 whitelistadd:addParam{ type=ULib.cmds.StringArg, hint="Steam ID to whitelist" }
 whitelistadd:defaultAccess( ULib.ACCESS_SUPERADMIN )
 whitelistadd:help( "Whitelists a Steam ID to the Wordlist Kicker wordlist." )
 
-function ulx.wkwhitelistremove( calling_ply, sid )
+function ulx.wkwhitelistremoveid( calling_ply, sid )
 
 	local sid = string.upper( sid )
 	
@@ -179,7 +209,7 @@ function ulx.wkwhitelistremove( calling_ply, sid )
 	end
 
 end
-local whitelistremove = ulx.command( CATEGORY_NAME, "ulx unwhitelist", ulx.wkwhitelistremove, "!unwhitelist", true )
+local whitelistremove = ulx.command( CATEGORY_NAME, "ulx unwhitelistid", ulx.wkwhitelistremoveid, "!unwhitelistid", true )
 whitelistremove:addParam{ type=ULib.cmds.StringArg, hint="Steam ID to unwhitelist" }
 whitelistremove:defaultAccess( ULib.ACCESS_SUPERADMIN )
 whitelistremove:help( "Unwhitelists a Steam ID from the Wordlist Kicker whitelist." )
