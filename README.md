@@ -23,3 +23,14 @@ The module allows server owners or admins to blacklist certain words that you wa
 ##Downloads - Release Archives:##
 - [Dropbox](https://www.dropbox.com/sh/tzeevvgh4yt3sif/6vY2b2T0ZF)
 - [Google Drive](https://drive.google.com/folderview?id=0B0YQtzHyT_pdV1ZxUE1GOF8tQjA)
+- [My website (Decicus.com)] (http://decicus.com/wk/)
+  
+##Changelog:##
+- ###Version 1.1:###
+	- Added configuration (read above for help).
+	- Added whitelisting of Steam ID's (players coming soon)
+  
+- ###Version 1.0:###
+	- Added adding/removing words.
+	- Added kicks (for anyone) if a blacklisted word is found in their name when they join.
+	- Also kicks anyone that changes to a name that contains a blacklisted word.
