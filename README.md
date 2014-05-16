@@ -16,7 +16,7 @@ The module allows server owners or admins to blacklist certain words that you wa
 - Ignoring admins/superadmins (Config - Added in v1.1)
   
 ##Planned changes/other additions:##
-- None (suggest some? <decicus@gmail.com>)
+- None (suggest some? <decicus@gmail.com> or [Issue Tracker](http://git.decicus.com/wordlist-kicker/issues))
   
 ##Finished changes/other additions:##
 - Change opposites (removing words/Steam ID's) to their own functions, for future customizations and better permission-customization for server owners.
