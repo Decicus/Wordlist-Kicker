@@ -47,7 +47,7 @@ The addon folder will contain a default file, please do not touch this.
 - [My website (Decicus.com)](http://decicus.com/wk/)
   
 ##Changelog:##
-- ###Version 1.1 (Coming soon):###
+- ###Version 1.1 (Requires proper testing - Coming soon):###
 	- Added whitelisting of Steam ID's (support for players added).
 	- Added a config/settings text file inside the data folder.
   
