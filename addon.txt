@@ -1,8 +1,8 @@
 "AddonInfo"
 {
 	"name"				"Wordlist Kicker"
-	"version"			"1.0"
-	"up_date"			"2014/05/05"
+	"version"			"1.1"
+	"up_date"			"2014/05/16"
 	"author_name"			"Decicus"
 	"author_email"			"decicus@gmail.com"
 	"author_url"			"http://decicus.com"

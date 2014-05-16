@@ -81,7 +81,7 @@ function WKCheckNameJoin( ply )
 	
 		if string.find( name, word, 1, true ) then
 		
-			ULib.kick( ply, "You got automatically kicked for having a name that contained '" .. word .. "'." )
+			ULib.kick( ply, "You got automatically kicked for having a name that contained '" .. word .. "'" )
 			return
 			
 		end
@@ -107,7 +107,7 @@ function WKCheckNameChange( ply, old, new )
 		
 		if string.find( new, word, 1, true ) then
 			
-			ULib.kick( ply, "You got automatically kicked for changing to a name that contained '" .. word .. "'." )
+			ULib.kick( ply, "You got automatically kicked for changing to a name that contained '" .. word .. "'" )
 			return
 		
 		end
