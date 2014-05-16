@@ -72,6 +72,8 @@ function WKCheckNameJoin( ply )
 	local sid = ply:SteamID()
 	
 	if table.HasValue( WKWhitelist, sid ) then return end
+	if ply:IsAdmin() and IgnoreAdmins then return end
+	if ply:IsSuperAdmin() and IgnoreSuperadmins then return end
 	
 	for k, word in pairs( WKWordlist ) do
 		
@@ -96,6 +98,8 @@ function WKCheckNameChange( ply, old, new )
 	local sid = ply:SteamID()
 	
 	if table.HasValue( WKWhitelist, sid ) then return end
+	if ply:IsAdmin() and IgnoreAdmins then return end
+	if ply:IsSuperAdmin() and IgnoreSuperadmins then return end
 	
 	for k, word in pairs( WKWordlist ) do
 	
@@ -144,6 +148,21 @@ whitelistply:defaultAccess( ULib.ACCESS_SUPERADMIN )
 whitelistply:help( "Whitelists a player that is currently connected to the server, to the Wordlist Kicker whitelist." )
 
 function ulx.wkwhitelistremove( calling_ply, target_ply )
+
+	if not ULib.fileExists( dir ) then ULib.fileCreateDir( dir ) end
+	
+	if table.HasValue( WKWhitelist, target_ply:SteamID() ) then
+	
+		table.RemoveByValue( WKWhitelist, target_ply:SteamID() )
+		ULib.fileWrite( dir .. whitelistfile, util.TableToKeyValues( WKWhitelist ) )
+		ulx.fancyLogAdmin( calling_ply, true, "#A removed #T from the Wordlist Kicker whitelist.", target_ply )
+		
+	else
+	
+		ULib.tsayError( calling_ply, "That player isn't whitelisted." )
+		
+	end
+
 end
 local whitelistplyr = ulx.command( CATEGORY_NAME, "ulx unwhitelist", ulx.wkwhitelistremove, "!unwhitelist", true )
 whitelistplyr:addParam { type=ULib.cmds.PlayerArg }
@@ -216,3 +235,52 @@ whitelistremove:help( "Unwhitelists a Steam ID from the Wordlist Kicker whitelis
 --[[
 	Whitelist End
 ]]
+
+
+--[[
+	Settings
+]]
+local settingsFile = "settings.txt"
+local readSettings = ULib.fileRead( dir .. settingsFile )
+local WKSettings = {}
+
+-- Insert settings
+WKSettings.IgnoreAdmins = "no"
+WKSettings.IgnoreSuperadmins = "no"
+
+if not ULib.fileExists( dir ) then ULib.fileCreateDir( dir ) end
+if not ULib.fileExists( dir .. settingsFile ) then ULib.fileWrite( dir .. settingsFile, file.Read( "data/wordlist_kicker_settings_default.txt", "GAME" ) ) end -- I don't know if ULib.fileRead works the same way.
+if readSettings then
+	
+	local kvalues = util.KeyValuesToTable( readSettings )
+	
+	for k, v in pairs( kvalues ) do
+	
+		if ( not k ) then continue end
+		
+		WKSettings[k] = v
+	
+	end
+	
+end
+
+-- This could probably have been done in a more efficient way.
+if WKSettings.ignoreadmins == "yes" then
+	
+	IgnoreAdmins = true
+	
+else
+	
+	IgnoreAdmins = false
+	
+end
+
+if WKSettings.ignoresuperadmins == "yes" then
+	
+	IgnoreSuperadmins = true
+	
+else
+	
+	IgnoreSuperadmins = false
+	
+end

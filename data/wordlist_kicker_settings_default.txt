@@ -1,0 +1,5 @@
+"TableToKeyValues"
+{
+	"IgnoreAdmins"		"no"
+	"IgnoreSuperadmins"		"no"
+}
