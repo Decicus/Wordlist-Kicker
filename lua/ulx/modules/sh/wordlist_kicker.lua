@@ -189,7 +189,18 @@ function ulx.wkwhitelistaddid( calling_ply, sid )
 			
 			table.insert( WKWhitelist, sid )
 			ULib.fileWrite( dir .. whitelistfile, util.TableToKeyValues( WKWhitelist ) )
-			ulx.fancyLogAdmin( calling_ply, true, "#A added #s to the Wordlist Kicker whitelist.", sid )
+			
+			local getPly = ULib.getPlyByID( sid )
+			
+			if getPly then
+			
+				ulx.fancyLogAdmin( calling_ply, true, "#A added #s (#s) to the Wordlist Kicker whitelist.", getPly:Nick(), sid )
+				
+			else
+			
+				ulx.fancyLogAdmin( calling_ply, true, "#A added #s to the Wordlist Kicker whitelist.", sid )
+			
+			end
 			
 		end
 
@@ -221,7 +232,18 @@ function ulx.wkwhitelistremoveid( calling_ply, sid )
 		
 			table.RemoveByValue( WKWhitelist, sid )
 			ULib.fileWrite( dir .. whitelistfile, util.TableToKeyValues( WKWhitelist ) )
-			ulx.fancyLogAdmin( calling_ply, true, "#A removed #s from the Wordlist Kicker whitelist.", sid )
+			
+			local getPly = ULib.getPlyByID( sid )
+			
+			if getPly then
+			
+				ulx.fancyLogAdmin( calling_ply, true, "#A removed #s (#s) from the Wordlist Kicker whitelist.", getPly:Nick(), sid )
+				
+			else
+			
+				ulx.fancyLogAdmin( calling_ply, true, "#A removed #s from the Wordlist Kicker whitelist.", sid )
+			
+			end
 			
 		end
 		
